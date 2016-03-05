@@ -7,18 +7,63 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
 
+    
+    @IBOutlet weak var outputLabel: UILabel!
+    
+    
+    var buttonSound : AVAudioPlayer!
+    var runningNumber = ""
+    var runningNumber2 = ""
+    var result = ""
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let path = NSBundle.mainBundle().pathForResource("btn", ofType: "wav")
+        let soundUrl = NSURL(fileURLWithPath: path!)
+        
+        do {
+            try buttonSound = AVAudioPlayer(contentsOfURL: soundUrl)
+            buttonSound.prepareToPlay()
+        } catch let err as NSError {
+            print(err.debugDescription)
+        }
+        
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func buttonPressed(sender: UIButton) {
+        
+        buttonSound.play()
+        
+        runningNumber += "\(sender.tag)"
+        outputLabel.text = runningNumber
+        
     }
+    
+    @IBAction func subtractPressed(sender: UIButton) {
+        
+        outputLabel.text = "-"
+        runningNumber2 = runningNumber
+        runningNumber = ""
+        
+    }
+    
+    @IBAction func equalPressed(sender: UIButton) {
+        
+        result = "\(Double(runningNumber2)! - Double(runningNumber)!)"
+        
+        outputLabel.text = result
+        result = ""
+        runningNumber = ""
+        runningNumber2 = ""
+        
+    }
+    
 
 
 }
